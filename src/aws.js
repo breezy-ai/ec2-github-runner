@@ -32,6 +32,15 @@ function buildUserDataScript(githubRegistrationToken, label) {
       `./config.sh --url https://github.com/${config.githubContext.owner}/${config.githubContext.repo} --token ${githubRegistrationToken} --labels ${label}`,
     ];
   }
+  userData.push([
+    'sudo apt clean',
+    'sudo apt-get update',
+    'sudo apt-get install -y docker.io unzip',
+    'sudo systemctl start docker',
+    'curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"',
+    'unzip awscliv2.zip',
+    'sudo ./aws/install',
+  ]);
 
   if (config.input.runAsUser) {
     userData.push(`chown -R ${config.input.runAsUser} .`);
