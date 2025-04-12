@@ -98,6 +98,7 @@ inputs:
     description: >-
       Specify the size of the EBS volume to attach to the runner.
     required: false
+
 outputs:
   label:
     description: >-

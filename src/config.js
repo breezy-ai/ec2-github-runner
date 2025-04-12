@@ -22,6 +22,7 @@ class Config {
       runAsService: core.getInput('run-runner-as-service') === 'true',
       runAsUser: core.getInput('run-runner-as-user'),
       storageSize: core.getInput('storage-size'),
+      storageDeviceName: core.getInput('storage-device-name'),
     };
 
     const tags = JSON.parse(core.getInput('aws-resource-tags'));
