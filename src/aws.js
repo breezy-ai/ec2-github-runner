@@ -80,7 +80,7 @@ async function startEc2Instance(label, githubRegistrationToken) {
     params.BlockDeviceMappings = [
       {
         DeviceName: '/dev/xvda',
-        Ebs: { VolumeSize: config.input.storageSize, VolumeType: 'gp2' },
+        Ebs: { VolumeSize: Number(config.input.storageSize), VolumeType: 'gp2' },
       },
     ];
   }
