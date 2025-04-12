@@ -88,7 +88,7 @@ async function startEc2Instance(label, githubRegistrationToken) {
   if (config.input.storageSize) {
     params.BlockDeviceMappings = [
       {
-        DeviceName: config.input.storageDeviceName || '/dev/sda1',
+        DeviceName: '/dev/sda1',
         Ebs: { VolumeSize: Number(config.input.storageSize), VolumeType: 'gp2' },
       },
     ];
