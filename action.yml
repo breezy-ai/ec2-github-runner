@@ -2,8 +2,8 @@ name: On-demand self-hosted AWS EC2 runner for GitHub Actions
 description: GitHub Action for automatic creation and registration AWS EC2 instance as a GitHub Actions self-hosted runner.
 author: Volodymyr Machula
 branding:
-  icon: 'box'
-  color: 'orange'
+  icon: "box"
+  color: "orange"
 inputs:
   mode:
     description: >-
@@ -60,7 +60,7 @@ inputs:
       This must be a stringified array of AWS Tag objects, with both Key and Value fields,
       for example: '[{"Key": "TagKey1", "Value": "TagValue1"}, {"Key": "TagKey2", "Value": "TagValue2"}]'
     required: false
-    default: '[]'
+    default: "[]"
   runner-home-dir:
     description: >-
       Directory that contains actions-runner software and scripts. E.g. /home/runner/actions-runner.
@@ -94,6 +94,10 @@ inputs:
   run-runner-as-user:
     description: >-
       Specify user under whom the runner service should run
+  storage-size:
+    description: >-
+      Specify the size of the EBS volume to attach to the runner.
+    required: false
 outputs:
   label:
     description: >-

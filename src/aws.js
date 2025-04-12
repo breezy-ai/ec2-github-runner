@@ -9,7 +9,7 @@ function buildUserDataScript(githubRegistrationToken, label) {
   if (config.input.runnerHomeDir) {
     // If runner home directory is specified, we expect the actions-runner software (and dependencies)
     // to be pre-installed in the AMI, so we simply cd into that directory and then start the runner
-    userData =  [
+    userData = [
       '#!/bin/bash',
       'exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1',
       `cd "${config.input.runnerHomeDir}"`,
@@ -32,6 +32,18 @@ function buildUserDataScript(githubRegistrationToken, label) {
       `./config.sh --url https://github.com/${config.githubContext.owner}/${config.githubContext.repo} --token ${githubRegistrationToken} --labels ${label}`,
     ];
   }
+  userData.push([
+    'sudo apt clean',
+    'sudo apt-get update',
+    'sudo apt-get install -y docker.io unzip',
+    'sudo systemctl start docker',
+    'sudo docker system prune --all --force --volumes',
+    'sudo systemctl restart docker',
+    'curl https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip',
+    'unzip awscliv2.zip',
+    'sudo ./aws/install',
+  ]);
+
   if (config.input.runAsUser) {
     userData.push(`chown -R ${config.input.runAsUser} .`);
   }
@@ -74,6 +86,15 @@ async function startEc2Instance(label, githubRegistrationToken) {
     TagSpecifications: config.tagSpecifications,
     InstanceMarketOptions: buildMarketOptions(),
   };
+
+  if (config.input.storageSize) {
+    params.BlockDeviceMappings = [
+      {
+        DeviceName: '/dev/xvdb',
+        Ebs: { VolumeSize: config.input.storageSize, VolumeType: 'gp3' },
+      },
+    ];
+  }
 
   try {
     const result = await ec2.send(new RunInstancesCommand(params));
@@ -119,7 +140,7 @@ async function waitForInstanceRunning(ec2InstanceId) {
             Values: [ec2InstanceId],
           },
         ],
-      },
+      }
     );
 
     core.info(`AWS EC2 instance ${ec2InstanceId} is up and running`);
